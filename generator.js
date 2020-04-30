@@ -29,7 +29,7 @@ function genData(columns, rows, seqno)
                var seqstart = parseInt(hdr[hdr.length - 1].arg) + parseInt(seqno * rows);
                hdr[hdr.length - 1].seqObj = new SeqObj(seqstart.toString());
            } else {
-               hdr[hdr.length-1].seqObj = new SeqObj(); 
+               hdr[hdr.length-1].seqObj = new SeqObj(seqno * rows + 1); 
                //alert('seq set at '+hdr.length-1);
            }
            //seqobj.n=hdr[k].arg-1;
