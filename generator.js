@@ -7,7 +7,7 @@ var chance = new chanceModule.Chance();
 var CSV = {delimiter: ","};
 
 // Taken from http://www.convertcsv.com/generate-test-data.htm
-function genData(columns, rows)
+function genData(columns, rows, seqno)
 {
     var j;
     var cols = columns.length;
@@ -26,7 +26,8 @@ function genData(columns, rows)
        if(hdr[hdr.length-1].keyword=="seq") {
            if(fld.length>1 && !isNaN(hdr[hdr.length-1].arg)) {
                //alert('seq set at '+(hdr.length-1)+", and starting n at "+ hdr[hdr.length-1].arg);
-               hdr[hdr.length-1].seqObj = new SeqObj(hdr[hdr.length-1].arg);
+               var seqstart = parseInt(hdr[hdr.length - 1].arg) + parseInt(seqno * rows);
+               hdr[hdr.length - 1].seqObj = new SeqObj(seqstart.toString());
            } else {
                hdr[hdr.length-1].seqObj = new SeqObj(); 
                //alert('seq set at '+hdr.length-1);
@@ -237,9 +238,9 @@ if (fs.existsSync(outputFileName)){
 	fs.unlinkSync(outputFileName);
 }
 
-for(var i = 0; i <dataRowsRequired; i = i + chunkSize){
+for (var i = 0, seqno = 0; i < dataRowsRequired; i = i + chunkSize, seqno++){
 	var size = chunkSize>dataRowsRequired? dataRowsRequired: chunkSize;
-	var csvStringPart = genData(columns, size);
+	var csvStringPart = genData(columns, size ,seqno);
 	console.log("Appending csv part ", i ," of size ", size);
 	fs.appendFile(outputFileName, csvStringPart, function (err) {
 		if(err) {
